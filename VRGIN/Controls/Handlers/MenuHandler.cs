@@ -158,7 +158,7 @@ namespace VRGIN.Controls.Handlers
                     if (Device.GetPressDown(EVRButtonId.k_EButton_SteamVR_Trigger))
                     {
                         IsPressing = true;
-                        VR.Input.Mouse.LeftButtonDown();
+                        VR.Input.Mouse.LeftButtonDown();    
                         mouseDownPosition = Vector2.Scale(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y), _ScaleVector);
                     }
                     if (Device.GetPress(EVRButtonId.k_EButton_SteamVR_Trigger))
@@ -262,7 +262,14 @@ namespace VRGIN.Controls.Handlers
                         //VRLog.Info("New Pos: {0}, textureCoord: {1}", newPos, hit.textureCoord);
                         if (!mouseDownPosition.HasValue || Vector2.Distance(mouseDownPosition.Value, newPos) > MOUSE_STABILIZER_THRESHOLD)
                         {
-                            MouseOperations.SetClientCursorPosition((int)newPos.x, (int)newPos.y);
+                            if (!Screen.fullScreen)
+                            {
+                                MouseOperations.SetClientCursorPosition((int)newPos.x, (int)newPos.y);
+                            }
+                            else
+                            {
+                                MouseOperations.SetClientCursorPositionFullscreen((int)newPos.x, (int)newPos.y);
+                            }
                             mouseDownPosition = null;
                         }
                     }
