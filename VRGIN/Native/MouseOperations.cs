@@ -1,11 +1,27 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using UnityEngine;
 using static VRGIN.Native.WindowsInterop;
 
 namespace VRGIN.Native
 {
     public class MouseOperations
     {
+        public static Resolution gameRes = Screen.currentResolution;
+        public static float gameRatio = (float)gameRes.width / gameRes.height;
+
+        public static RECT clientRect = WindowManager.GetClientRect();
+        public static float clientWidth = clientRect.Right - clientRect.Left;
+        public static float clientHeight = clientRect.Bottom - clientRect.Top;
+        public static float  windowRatio = (float)clientWidth / clientHeight;
+
+        public static bool isWindowWider = gameRatio < windowRatio;
+
+        public static float widthProjectionMultiplier = (float)clientHeight / gameRes.height;
+        public static float widthProjection = widthProjectionMultiplier * gameRes.width;
+        public static int leftIdent = (int)((clientWidth - widthProjection) / 2);
+
+        public static float heightProjectionMultiplier = (float)clientWidth / gameRes.width;
+        public static float heightProjection = heightProjectionMultiplier * gameRes.height;
+        public static int topIdent = (int)((clientHeight - heightProjection) / 2);
 
         public static void SetCursorPosition(int X, int Y)
         {
@@ -17,6 +33,19 @@ namespace VRGIN.Native
             var clientRect = WindowManager.GetClientRect();
             SetCursorPos(x + clientRect.Left, y + clientRect.Top);
         }
+
+        public static void SetClientCursorPositionFullscreen(int x, int y)
+        {
+            if (isWindowWider)
+            {
+                SetCursorPos((int)(x * widthProjectionMultiplier) + leftIdent, (int)(y * widthProjectionMultiplier));
+            } else
+            {
+                SetCursorPos((int)(x * heightProjectionMultiplier), (int)(y * heightProjectionMultiplier) + topIdent);
+            }
+        }
+
+
 
         public static POINT GetClientCursorPosition()
         {

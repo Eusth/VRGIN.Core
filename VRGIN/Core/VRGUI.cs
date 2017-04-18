@@ -120,14 +120,26 @@ namespace VRGIN.Core
         protected override void OnAwake()
         {
             var window = WindowManager.GetClientRect();
-            Width = window.Right - window.Left;
-            Height = window.Bottom - window.Top;
+            //VRLog.Info("IsFullScreen?{0}", Screen.fullScreen);
+            //VRLog.Info("WindowWidth:{0},WindowHeight:{1}", window.Right - window.Left, window.Bottom - window.Top);
+            if (!Screen.fullScreen)
+            {
+                Width = window.Right - window.Left;
+                Height = window.Bottom - window.Top;
+            }
+            else
+            {
+                Width = Screen.currentResolution.width;
+                Height = Screen.currentResolution.height;
+            }
+            
 
-            uGuiTexture = new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.Default);
+            uGuiTexture = new RenderTexture(Width, Height, 24, RenderTextureFormat.Default);
             uGuiTexture.Create();
 
-            IMGuiTexture = new RenderTexture(Screen.width, Screen.height, 0, RenderTextureFormat.Default);
+            IMGuiTexture = new RenderTexture(Width, Height, 0, RenderTextureFormat.Default);
             IMGuiTexture.Create();
+            //VRLog.Info("ScreencurrentWidth:{0},ScreencurrentHeight:{1}", Screen.currentResolution.width, Screen.currentResolution.height);
 
             transform.localPosition = Vector3.zero;// new Vector3(0, 0, distance);
             transform.localRotation = Quaternion.identity;
@@ -135,8 +147,8 @@ namespace VRGIN.Core
             transform.gameObject.AddComponent<SlowGUI>();
 
             // Add GUI camera
-            var halfHeight = Screen.height * 0.5f;
-            var halfWidth = Screen.width * 0.5f;
+            var halfHeight = Width * 0.5f;
+            var halfWidth = Height * 0.5f;
 
             _VRGUICamera = new GameObject("VRGIN_GUICamera").AddComponent<Camera>();
             _VRGUICamera.transform.SetParent(transform);
