@@ -333,7 +333,7 @@ namespace VRGIN.Controls.Tools
                     if (OtherController.Input.GetPress(SECONDARY_ROTATE_BUTTON))
                     {
                         InitializeRotationIfNeeded();
-                        var angleDiff = Calculator.Angle(_PrevFromTo, newFromTo) * VR.Settings.RotationMultiplier;
+                        var angleDiff = - Calculator.Angle(_PrevFromTo, newFromTo) * VR.Settings.RotationMultiplier;
                         VR.Camera.SteamCam.origin.transform.RotateAround(VR.Camera.Head.position, Vector3.up, angleDiff);// Mathf.Max(1, Controller.velocity.sqrMagnitude) );
 
                         _ProspectedPlayArea.Rotation += angleDiff;
